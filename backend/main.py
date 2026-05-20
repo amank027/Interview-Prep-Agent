@@ -11,14 +11,10 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Allow all origins if CORS_ORIGINS contains "*", else use the list
-origins = settings.cors_origins
-allow_all = "*" in origins
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"] if allow_all else origins,
-    allow_credentials=False if allow_all else True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -29,11 +25,11 @@ app.include_router(interview_router)
 app.include_router(feedback_router)
 
 
-@app.get("/", tags=["Health"])
+@app.api_route("/", methods=["GET", "HEAD"], tags=["Health"])
 def health_check() -> dict:
     return {"status": "ok", "service": "AI Interview Preparation Assistant"}
 
 
-@app.get("/health", tags=["Health"])
+@app.api_route("/health", methods=["GET", "HEAD"], tags=["Health"])
 def health() -> dict:
     return {"status": "healthy"}
